@@ -2,7 +2,7 @@
 import { randomUUID } from "node:crypto";
 import { unitRepository } from "./unit.repository.js";
 import { ApiError } from "../../utils/api-error.js";
-import type { CreateUnitInput, UpdateUnitInput } from "./unit.dto.js";
+import type { CreateUnitDto, UpdateUnitDto } from "./unit.validation.js";
 
 export const unitService = {
     async getAll() {
@@ -19,7 +19,7 @@ export const unitService = {
         return unit;
     },
 
-    async create(input: CreateUnitInput) {
+    async create(input: CreateUnitDto) {
         const normalizedUnit = input.unit.trim();
 
         if (!normalizedUnit) {
@@ -32,7 +32,7 @@ export const unitService = {
         );
     },
 
-    async update(id: string, input: UpdateUnitInput) {
+    async update(id: string, input: UpdateUnitDto) {
         await this.getById(id);
 
         const normalizedUnit = input.unit.trim();

@@ -1,11 +1,5 @@
-export interface CreatePriceOptionInput {
+export interface PriceOptionResponse {
     optionName?: string | null;
     price: string;
     quantity: string;
-}
-
-export interface UpdatePriceOptionInput {
-    optionName?: string | null;
-    price?: string;
-    quantity?: string;
 }

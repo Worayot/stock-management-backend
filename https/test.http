@@ -26,6 +26,7 @@ Origin: http://localhost:3000
 POST http://localhost:3000/api/auth/sign-out
 Content-Type: application/json
 Origin: http://localhost:3000
+# Cookie: better-auth.session_token=YOUR_SESSION
 
 {
     "email": "john@example.com",

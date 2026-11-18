@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import type { Prisma } from "../../generated/prisma/client.js";
 import { itemPriceOptionRepository } from "./item-price-option.repository.js";
 import { ApiError } from "../../utils/api-error.js";
-import type { CreatePriceOptionInput, UpdatePriceOptionInput } from "./item-price-option.dto.js";
+import type { CreatePriceOptionDto, UpdatePriceOptionDto } from "./item-price-option.validation.js";
 
 export const itemPriceOptionService = {
     async getAll(creatorId: string) {
@@ -42,7 +42,7 @@ export const itemPriceOptionService = {
     async create(
         itemId: string,
         creatorId: string,
-        input: CreatePriceOptionInput
+        input: CreatePriceOptionDto
     ) {
         const item = await itemPriceOptionRepository.findItemById(
         itemId,
@@ -67,7 +67,7 @@ export const itemPriceOptionService = {
     async update(
         id: string,
         creatorId: string,
-        input: UpdatePriceOptionInput
+        input: UpdatePriceOptionDto
     ) {
         await this.getById(id, creatorId);
 

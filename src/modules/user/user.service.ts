@@ -1,7 +1,7 @@
 import { userRepository } from "./user.repository.js";
-import { toUserResponseDTO } from "./user.mapper.js";
+import { toUserResponseDto } from "./user.mapper.js";
 import { ApiError } from "../../utils/api-error.js";
-import type { UpdateUserInput } from "./user.validation.js";
+import type { UpdateUserDto } from "./user.validation.js";
 
 export class UserService {
     async getUserById(userId: string) {
@@ -11,12 +11,12 @@ export class UserService {
         throw new ApiError(404, "User not found");
         }
 
-        return toUserResponseDTO(user);
+        return toUserResponseDto(user);
     }
 
     async updateUser(
         userId: string,
-        data: UpdateUserInput
+        data: UpdateUserDto
     ) {
         const existingUser = await userRepository.findById(userId);
 
@@ -29,7 +29,7 @@ export class UserService {
         data
         );
 
-        return toUserResponseDTO(updatedUser);
+        return toUserResponseDto(updatedUser);
     }
 
     async deleteUser(userId: string) {

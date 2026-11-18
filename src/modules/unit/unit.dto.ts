@@ -1,7 +1,3 @@
-export interface CreateUnitInput {
-    unit: string;
-}
-
-export interface UpdateUnitInput {
-    unit: string;
+export interface UnitResponseDto {
+    
 }

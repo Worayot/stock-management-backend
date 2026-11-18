@@ -1,9 +1,9 @@
 import type { User } from "../../generated/prisma/client.js";
-import type { UserResponseDTO } from "./user.dto.js";
+import type { UserResponseDto } from "./user.dto.js";
 
-export function toUserResponseDTO(
+export function toUserResponseDto(
     user: User
-    ): UserResponseDTO {
+    ): UserResponseDto {
     return {
         id: user.id,
         name: user.name,

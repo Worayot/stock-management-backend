@@ -5,7 +5,7 @@ import type {
 
 import { userService } from "./user.service.js";
 
-import type { UpdateUserInput } from "./user.validation.js";
+import type { UpdateUserDto } from "./user.validation.js";
 
 export class UserController {
 
@@ -27,7 +27,7 @@ export class UserController {
 
         const userId = res.locals.userId as string;
 
-        const data = res.locals.validatedBody as UpdateUserInput;
+        const data = res.locals.validatedBody as UpdateUserDto;
 
         const user = await userService.updateUser(
         userId,

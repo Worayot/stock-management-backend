@@ -3,10 +3,10 @@ import { randomUUID } from "node:crypto";
 import type { Prisma } from "../../generated/prisma/client.js";
 import { itemRepository } from "./item.repository.js";
 import { ApiError } from "../../utils/api-error.js";
-import type { CreateItemInput, UpdateItemInput } from "./item.dto.js";
+import type { CreateItemDto, UpdateItemDto } from "./item.validation.js";
 
 export const itemService = {
-  async getAll(creatorId: string) {
+    async getAll(creatorId: string) {
         return await itemRepository.findAll(creatorId);
     },
 
@@ -20,7 +20,7 @@ export const itemService = {
         return item;
     },
 
-    async create(creatorId: string, input: CreateItemInput) {
+    async create(creatorId: string, input: CreateItemDto) {
         const unit = await itemRepository.findUnitById(input.unitId);
 
         if (!unit) {
@@ -33,7 +33,7 @@ export const itemService = {
         creatorId,
         unitId: input.unitId,
         imageId: input.imageId ?? null,
-        quantity: input.quantity ?? "0"
+        quantity: input.quantity ?? 0
         };
 
         return itemRepository.create(data);
@@ -42,16 +42,16 @@ export const itemService = {
     async update(
         id: string,
         creatorId: string,
-        input: UpdateItemInput
+        input: UpdateItemDto
     ) {
         const existingItem = await this.getById(id, creatorId);
 
         if (input.unitId) {
-        const unit = await itemRepository.findUnitById(input.unitId);
+            const unit = await itemRepository.findUnitById(input.unitId);
 
-        if (!unit) {
-            throw new ApiError(404, "Unit not found");
-        }
+            if (!unit) {
+                throw new ApiError(404, "Unit not found");
+            }
         }
 
         const data: Prisma.ItemUpdateInput = {
