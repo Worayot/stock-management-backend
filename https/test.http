@@ -1,0 +1,43 @@
+###
+GET http://localhost:3000/health
+
+### Sign up
+POST http://localhost:3000/api/auth/sign-up/email
+Content-Type: application/json
+Origin: http://localhost:3000
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "example-password"
+}
+
+### Sign in
+POST http://localhost:3000/api/auth/sign-in/email
+Content-Type: application/json
+Origin: http://localhost:3000
+
+{
+    "email": "john@example.com",
+    "password": "example-password"
+}
+
+### Sign out
+POST http://localhost:3000/api/auth/sign-out
+Content-Type: application/json
+Origin: http://localhost:3000
+
+{
+    "email": "john@example.com",
+    "password": "example-password"
+}
+
+### Get session
+GET http://localhost:3000/api/auth/get-session
+Content-Type: application/json
+Origin: http://localhost:3000
+
+{
+    "email": "john@example.com",
+    "password": "example-password"
+}

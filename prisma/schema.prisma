@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ItemCategory {
+  Discrete
+  Continuous
+}
+
+model User {
+  id             String    @id
+  name           String
+  email          String
+  emailVerified  Boolean   @default(false)
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  createdItems   Item[]    @relation("ItemCreator")
+  uploadedImages Image[]   @relation("ImageUploader")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Item {
+  id           String       @id
+  categoryType ItemCategory @map("category_type")
+  creatorId    String       @map("creator_id")
+  imageId      String?      @unique @map("img_id")
+  unitId       String       @map("unit_id")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  quantity  Decimal  @default(0) @db.Decimal(12, 3)
+
+  creator User   @relation("ItemCreator", fields: [creatorId], references: [id], onDelete: Restrict)
+  image   Image? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  unit    Unit   @relation(fields: [unitId], references: [id], onDelete: Restrict)
+
+  priceOptions ItemPriceOption[]
+
+  @@index([creatorId])
+  @@map("Item")
+}
+
+model ItemPriceOption {
+  id         String  @id
+  optionName String? @unique @map("option_name")
+  itemId     String  @map("item_id")
+  price      Decimal @db.Decimal(12, 2)
+  quantity   Decimal @db.Decimal(12, 3)
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId])
+  @@map("ItemPriceOption")
+}
+
+model Image {
+  id           String   @id
+  data         Bytes    @db.ByteA
+  mimeType     String   @map("mime_type")
+  fileName     String?  @map("file_name")
+  fileSize     BigInt   @map("file_size")
+  uploadedById String   @map("uploaded_by_id")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  uploadedBy   User     @relation("ImageUploader", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  item Item?
+
+  @@index([uploadedById])
+  @@map("Image")
+}
+
+model Unit {
+  id   String @id
+  unit String @unique
+
+  items Item[]
+
+  @@map("Unit")
+}
